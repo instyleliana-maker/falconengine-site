@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="FalconEngine is a real-world intelligence platform in development, starting with energy.">
+<meta name="description" content="FalconEngine is a real-world intelligence platform in development, starting with energy. Membership is invite only.">
 <title>FalconEngine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,6 +62,7 @@
     opacity:.6;
   }
   .wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding-inline:32px}
+  [hidden]{display:none!important}
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   a:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible{
     outline:2px solid var(--accent-2);outline-offset:3px;border-radius:3px;
@@ -287,7 +288,6 @@
   }
   .net-tabs .tab:hover{color:var(--bright);border-color:var(--accent-line)}
   .net-tabs .tab.on{color:var(--accent-2);border-color:rgba(77,214,255,.5);background:rgba(77,214,255,.08)}
-  .net-tabs .ctl{margin-left:auto}
   .net-steps{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
   .net-steps li{
     font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
@@ -566,6 +566,7 @@
     text-transform:uppercase;color:var(--bright);font-weight:500;
   }
   .notice p{margin:0;font-size:13px;line-height:1.6;color:var(--muted-2)}
+  .notice.wide{grid-column:1/-1}
 
   /* ============== FOOTER ============== */
   footer.site{padding-block:36px 32px;position:relative;z-index:1}
@@ -684,7 +685,7 @@
       <a href="#platform">Platform</a>
       <a href="#sectors">Sectors</a>
       <a href="#intelligence">Intelligence</a>
-      <a href="#about">About</a>
+      <a href="#principle">About</a>
     </nav>
     <a href="#feedback" class="btn btn-primary">Give feedback →</a>
   </div>
@@ -712,8 +713,8 @@
           <b>In development</b>
         </div>
         <div class="meta-cell">
-          <label>Availability</label>
-          <b>Not yet launched</b>
+          <label>Membership</label>
+          <b>Invite only</b>
         </div>
       </div>
     </div>
@@ -777,7 +778,6 @@
           <button type="button" class="tab on" data-s="0" aria-pressed="true">Heatwave</button>
           <button type="button" class="tab" data-s="1" aria-pressed="false">Port disruption</button>
           <button type="button" class="tab" data-s="2" aria-pressed="false">Monsoon shortfall</button>
-          <button type="button" class="tab ctl" id="net-toggle" aria-label="Pause animation">Pause</button>
         </div>
         <ol class="net-steps" id="net-steps" aria-label="Steps in the illustrative chain"></ol>
         <p class="net-readout" id="net-readout"></p>
@@ -998,7 +998,7 @@
   </section>
 
   <!-- ENGINE -->
-  <section id="about" class="block">
+  <section id="about" class="block" hidden>
     <div class="wrap">
       <div class="reveal">
         <div class="eyebrow">Planned Architecture</div>
@@ -1101,7 +1101,7 @@
   </section>
 
   <!-- TRUST -->
-  <section class="block">
+  <section id="principle" class="block">
     <div class="wrap">
       <div class="reveal">
         <div class="eyebrow">Principle</div>
@@ -1163,6 +1163,7 @@
       <div class="eyebrow reveal">Feedback</div>
       <h2 class="reveal">The system is <em>being built.</em></h2>
       <p class="lead reveal">We are building the first layer of India's real-world intelligence platform, beginning with energy. Tell us what would make it useful.</p>
+      <p class="section-note reveal" style="margin-inline:auto;max-width:520px">Membership is invite only. Sending feedback does not request or guarantee an invitation.</p>
 
       <form class="fb-form reveal" id="fb-form" novalidate>
         <div class="field">
@@ -1211,6 +1212,10 @@
         <p>FalconEngine is an independent project. It is not affiliated with, endorsed by, or acting on behalf of the Government of India, any government body, regulator or stock exchange. Sector and market names describe subject matter only.</p>
       </div>
       <div class="notice">
+        <h3>Membership</h3>
+        <p>Membership of FalconEngine will be by invitation only. Sending feedback through this page does not request, reserve or guarantee an invitation or any access.</p>
+      </div>
+      <div class="notice wide">
         <h3>Privacy</h3>
         <p>This page collects no personal data itself and uses no cookies, analytics or advertising trackers. If you send feedback, it goes by email from your own mail app, so we receive your email address and message. We use them only to review feedback and to reply if you ask. To have them deleted, email us. Fonts load from Google Fonts, which may receive your IP address.</p>
       </div>
@@ -1508,7 +1513,7 @@
 
   // ---------- console: tabs, steps, readout ----------
   var tabs=[].slice.call(document.querySelectorAll('.net-tabs .tab[data-s]'));
-  var toggle=$('net-toggle'), stepsEl=$('net-steps'), readout=$('net-readout');
+  var stepsEl=$('net-steps'), readout=$('net-readout');
   var chipEls=[], lastReadout={tag:'',msg:''};
 
   function paint(tag,msg){
@@ -1604,12 +1609,6 @@
   }
 
   tabs.forEach(function(t,j){ t.addEventListener('click',function(){ selectScenario(j); }); });
-  toggle.addEventListener('click',function(){
-    userPaused=!userPaused;
-    toggle.textContent=userPaused ? 'Play' : 'Pause';
-    toggle.setAttribute('aria-label', userPaused ? 'Play animation' : 'Pause animation');
-    if(!userPaused) startScenario(sc.i);
-  });
 
   // ---------- hover / focus on a sector ----------
   function setFocus(i){
@@ -1708,8 +1707,6 @@
 
   if(prefersReduced){
     userPaused=true;
-    toggle.textContent='Play';
-    toggle.setAttribute('aria-label','Play animation');
     renderStatic(0);
   } else {
     startScenario(0);
